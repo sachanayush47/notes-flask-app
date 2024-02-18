@@ -8,6 +8,9 @@ def create_note(title: str, content: str, author_id: int):
         if not title or not content:
             return {'message': 'Title and content are required'}, 400
 
+        title = str(title)
+        content = str(content)
+
         new_note = Note(title=title, content=content, author_id=author_id)
         db.session.add(new_note)
         db.session.commit()
@@ -57,8 +60,8 @@ def update_note(note_id: int, author_id: int, **kwargs):
         if not note:
             return {'message': 'Note not found'}, 404
 
-        new_title = kwargs.get('title', note.title)
-        new_content = kwargs.get('content', note.content)
+        new_title = str(kwargs.get('title', note.title))
+        new_content = str(kwargs.get('content', note.content))
 
         # Only perform update if there are changes
         if new_title == note.title and new_content == note.content:
