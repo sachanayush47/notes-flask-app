@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 from config.db import db
 from routes.auth_routes import auth_bp
 from routes.notes_routes import notes_bp
-from utils.crypt_utils import bcrypt
+from config.crypt import bcrypt
 
 load_dotenv()
 

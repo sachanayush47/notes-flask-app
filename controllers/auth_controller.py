@@ -1,6 +1,6 @@
 from models.User import User
 from config.db import db
-from utils.crypt_utils import bcrypt
+from config.crypt import bcrypt
 from utils.auth_utils import create_jwt, get_user_data
 
 
@@ -19,7 +19,7 @@ def login(username: str, password: str):
 
             user_data = get_user_data(user)
 
-            return {'message': f'Welcomee {user.name}', 'token': jwt_token, 'user': user_data}, 200
+            return {'message': f'Welcome {user.name}', 'token': jwt_token, 'user': user_data}, 200
         else:
             return {'message': 'Invalid username or password'}, 401
     except Exception as e:
