@@ -8,7 +8,7 @@ This documentation details the API endpoints for a notes application built using
 
 -   **Application URL:** The application is deployed on Render at [https://neofi-notes-api.onrender.com](https://neofi-notes-api.onrender.com).
 -   **Database Hosting:** The MySQL database is hosted on Clever Cloud.
-  
+
 Note: The backend and database are hosted on the free tier of their respective platforms. As a result, response times might exceed 30 seconds, especially if the service has been inactive for more than 10 minutes. This delay occurs because Render automatically spins down inactive services to conserve resources, and restarting them can take some time.
 
 ## Quick API Testing with Postman
@@ -147,10 +147,6 @@ Ensure the reliability and functionality of the API with unit tests:
 -   For authentication routes:
     ```
     python -m unittest tests/auth/test_auth_routes.py
-    ```
--   For notes routes:
-    ```
-    python -m unittest tests/auth/test_notes_routes.py
     ```
 
 ## Authentication Required
