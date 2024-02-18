@@ -86,20 +86,23 @@ def update_note(note_id: int, author_id: int, **kwargs):
 
 
 def get_note_version_history(note_id: int, author_id: int):
-    # Allow user to get version history of both personal and shared notes
-    note = Note.query.filter(
-        (Note.id == note_id) &
-        ((Note.author_id == author_id) |
-            (Note.shared_with.any(User.id == author_id)))
-    ).first()
+    try:
+        # Allow user to get version history of both personal and shared notes
+        note = Note.query.filter(
+            (Note.id == note_id) &
+            ((Note.author_id == author_id) |
+             (Note.shared_with.any(User.id == author_id)))
+        ).first()
 
-    if not note:
-        return {'message': 'Note not found'}, 404
+        if not note:
+            return {'message': 'Note not found'}, 404
 
-    versions = NoteVersion.query.filter_by(note_id=note.id).order_by(
-        NoteVersion.versioned_at.desc()).all()
-    version_data = [get_note_data(version) for version in versions]
-    return {'message': '', 'versions': version_data}, 200
+        versions = NoteVersion.query.filter_by(note_id=note.id).order_by(
+            NoteVersion.versioned_at.desc()).all()
+        version_data = [get_note_data(version) for version in versions]
+        return {'message': '', 'versions': version_data}, 200
+    except Exception as e:
+        return {'message': str(e)}, 500
 
 
 def get_note_data(note):
