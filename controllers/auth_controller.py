@@ -35,6 +35,10 @@ def signup(name: str, username: str, password: str):
         username = str(username)
         password = str(password)
 
+        old_user = User.query.filter_by(username=username).first()
+        if old_user:
+            return {'message': 'Username already exists'}, 400
+
         hashed_password = bcrypt.generate_password_hash(
             password).decode('utf-8')
         new_user = User(name=name, username=username, password=hashed_password)
