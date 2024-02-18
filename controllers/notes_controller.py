@@ -8,9 +8,11 @@ def create_note(title: str, content: str, author_id: int):
         if not title or not content:
             return {'message': 'Title and content are required'}, 400
 
+        # Convert to string to avoid type errors
         title = str(title)
         content = str(content)
 
+        # Create new note
         new_note = Note(title=title, content=content, author_id=author_id)
         db.session.add(new_note)
         db.session.commit()
@@ -30,6 +32,7 @@ def get_note(note_id: int, author_id: int):
         ).first()
 
         if note:
+            # If note is found, return it
             note_data = get_note_data(note)
             return {'message': 'Note retreived successfully', 'note': note_data}, 200
 
@@ -43,6 +46,7 @@ def share_note(note_id: int, usernames: list):
         users = User.query.filter(User.username.in_(usernames)).all()
 
         for user in users:
+            # Check if note is already shared with user, else add it
             if not NoteShare.query.filter_by(note_id=note_id, user_id=user.id).first():
                 db.session.add(NoteShare(note_id=note_id, user_id=user.id))
 
@@ -54,7 +58,7 @@ def share_note(note_id: int, usernames: list):
 
 def update_note(note_id: int, author_id: int, **kwargs):
     try:
-        # Allow user to update shared notes as well
+        # Allow user to update both personal and shared notes
         note = Note.query.filter(
             (Note.id == note_id) &
             ((Note.author_id == author_id) |
@@ -62,8 +66,10 @@ def update_note(note_id: int, author_id: int, **kwargs):
         ).first()
 
         if not note:
+            # If note is not found, return 404
             return {'message': 'Note not found'}, 404
 
+        # Convert to string to avoid type errors and get new values
         new_title = str(kwargs.get('title', note.title))
         new_content = str(kwargs.get('content', note.content))
 
@@ -71,10 +77,12 @@ def update_note(note_id: int, author_id: int, **kwargs):
         if new_title == note.title and new_content == note.content:
             return {'message': 'No changes found'}, 400
 
+        # Create a new version of the note before updating
         version = NoteVersion(
             note_id=note.id, title=note.title, content=note.content)
         db.session.add(version)
 
+        # Update note
         note.title = new_title
         note.content = new_content
 
@@ -95,11 +103,14 @@ def get_note_version_history(note_id: int, author_id: int):
         ).first()
 
         if not note:
+            # If note is not found, return 404
             return {'message': 'Note not found'}, 404
 
+        # Get all versions of the note in descending order
         versions = NoteVersion.query.filter_by(note_id=note.id).order_by(
             NoteVersion.versioned_at.desc()).all()
         version_data = [get_note_data(version) for version in versions]
+
         return {'message': 'Note versions retreived successfully', 'versions': version_data}, 200
     except Exception as e:
         return {'message': str(e)}, 500

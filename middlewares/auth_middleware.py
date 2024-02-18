@@ -17,7 +17,7 @@ def verify_token(f):
             return jsonify({'message': 'Token is missing!'}), 401
 
         try:
-            # Decode the token
+            # Decode the token, get the user data and attach it to the request object
             data = decode_jwt(token)
             user = User.query.get(data['data']['id'])
             user_data = get_user_data(user)

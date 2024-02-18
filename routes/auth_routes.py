@@ -13,6 +13,7 @@ def login_route():
     login_response, status_code = login(username, password)
 
     if 'token' in login_response:
+        # If login is successful, set the token in a cookie and return the user data
         token = login_response['token']
         login_response.pop('token')
         response = make_response(jsonify(login_response), status_code)

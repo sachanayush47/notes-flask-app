@@ -9,14 +9,14 @@ def login(username: str, password: str):
         if not username or not password:
             return {'message': 'Username and password are required'}, 400
 
+        # Convert to string to avoid type errors
         username = str(username)
         password = str(password)
 
+        # Check if user exists and password is correct
         user = User.query.filter_by(username=username).first()
-
         if user and bcrypt.check_password_hash(user.password, password):
             jwt_token = create_jwt({'id': user.id})
-
             user_data = get_user_data(user)
 
             return {'message': f'Welcome {user.name}', 'token': jwt_token, 'user': user_data}, 200
@@ -31,14 +31,17 @@ def signup(name: str, username: str, password: str):
         if not name or not username or not password:
             return {'message': 'Name, username and password are required'}, 400
 
+        # Convert to string to avoid type errors
         name = str(name)
         username = str(username)
         password = str(password)
 
+        # Check if user already exists
         old_user = User.query.filter_by(username=username).first()
         if old_user:
             return {'message': 'Username already exists'}, 400
 
+        # Create new user
         hashed_password = bcrypt.generate_password_hash(
             password).decode('utf-8')
         new_user = User(name=name, username=username, password=hashed_password)
