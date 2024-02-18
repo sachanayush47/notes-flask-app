@@ -31,7 +31,7 @@ def get_note(note_id: int, author_id: int):
 
         if note:
             note_data = get_note_data(note)
-            return {'message': '', 'note': note_data}, 200
+            return {'message': 'Note retreived successfully', 'note': note_data}, 200
 
         return {'message': 'Note not found'}, 404
     except Exception as e:
@@ -100,7 +100,7 @@ def get_note_version_history(note_id: int, author_id: int):
         versions = NoteVersion.query.filter_by(note_id=note.id).order_by(
             NoteVersion.versioned_at.desc()).all()
         version_data = [get_note_data(version) for version in versions]
-        return {'message': '', 'versions': version_data}, 200
+        return {'message': 'Note versions retreived successfully', 'versions': version_data}, 200
     except Exception as e:
         return {'message': str(e)}, 500
 
