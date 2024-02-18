@@ -25,7 +25,7 @@ def create_app():
     bcrypt.init_app(app)
     
     app.register_blueprint(auth_bp, url_prefix=f'/{BASE_URL}/auth')
-    app.register_blueprint(notes_bp, url_prefix=f'/api/v1/notes')
+    app.register_blueprint(notes_bp, url_prefix=f'/{BASE_URL}/notes')
     
     return app
 
