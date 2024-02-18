@@ -4,9 +4,11 @@ import os
 
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 
+
 def decode_jwt(token):
     """Decodes a JWT token."""
     return jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
+
 
 def create_jwt(data):
     """Creates a JWT token."""
@@ -15,9 +17,10 @@ def create_jwt(data):
         'exp': datetime.utcnow() + timedelta(days=30),
         'iat': datetime.utcnow()
     }
-    
+
     token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
     return token
+
 
 def get_user_data(user):
     user_data = user.__dict__

@@ -4,6 +4,7 @@ from functools import wraps
 from models.User import User
 from utils.auth_utils import decode_jwt, get_user_data
 
+
 def verify_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
