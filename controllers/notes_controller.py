@@ -54,8 +54,12 @@ def share_note(note_id: int, usernames: list):
 
 def update_note(note_id: int, author_id: int, **kwargs):
     try:
-        # User is not allowed to update shared notes
-        note = Note.query.filter_by(id=note_id, author_id=author_id).first()
+        # Allow user to update shared notes as well
+        note = Note.query.filter(
+            (Note.id == note_id) &
+            ((Note.author_id == author_id) |
+             (Note.shared_with.any(User.id == author_id)))
+        ).first()
 
         if not note:
             return {'message': 'Note not found'}, 404
